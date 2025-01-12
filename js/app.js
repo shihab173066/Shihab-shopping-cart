@@ -107,10 +107,15 @@ function addToCart(productId) {
 // Apply Coupon Code
 function applyCoupon() {
   const couponCode = document.getElementById("coupon-code").value.trim();
-  if (couponCode === "Ostad") {
-    cart.discount = 0.2; // 20% discount
-    alert("Coupon applied! You get a 20% discount.");
-  } else {
+  if (couponCode === "ostad10") {
+    cart.discount = 0.1; // 10% discount
+    alert("Coupon applied! You get a 10% discount.");
+  } 
+  else if (couponCode === "ostad5") {
+    cart.discount = 0.05; // 5% discount
+    alert("Coupon applied! You get a 5% discount.");
+  } 
+  else {
     cart.discount = 0;
     alert("Invalid coupon code.");
   }
@@ -146,6 +151,23 @@ function updateCart() {
   const discountAmount = cart.total * cart.discount;
   cartCount.textContent = cart.items.reduce((sum, item) => sum + item.quantity, 0);
   cartTotal.textContent = (cart.total - discountAmount).toFixed(2);
+}
+
+function updateQuantity(itemId, delta) {
+  const item = cart.items.find((item) => item.id === itemId);
+
+  if (item) {
+    item.quantity += delta;
+
+    // Remove the item if the quantity becomes 0 or less
+    if (item.quantity <= 0) {
+      cart.items = cart.items.filter((item) => item.id !== itemId);
+    }
+
+    updateCart(); // Refresh the cart display
+  } else {
+    console.error(`Item with ID ${itemId} not found in the cart.`);
+  }
 }
 
 // Display checkout summary in a modal
